@@ -54,6 +54,7 @@ main(void)
 		if (place < 0 || place > 9) {
 			fprintf(stderr, "error: ivalid place. Press enter to continue...");
 			getchar();
+			continue;
 		}
 		draw_on_board(place, symbol);
 		if (game_over())
