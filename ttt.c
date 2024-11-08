@@ -48,6 +48,7 @@ main(void)
 
 		display_board();
 		printf("Player #%d's turn: ", player + 1);
+		fflush(stdout);
 		scanf("%d", &place);
 		getchar();
 		if (place < 0 || place > 9) {
