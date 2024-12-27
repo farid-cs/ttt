@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int board[3][3] = {
+static int board[3][3] = {
 	{'0', '1', '2'},
 	{'3', '4', '5'},
 	{'6', '7', '8'},
