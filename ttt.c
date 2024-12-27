@@ -6,7 +6,7 @@ int board[3][3] = {
 	{'6', '7', '8'},
 };
 
-void
+static void
 display_board(void)
 {
 	for (int i = 0; i != 3; i++) {
@@ -15,13 +15,13 @@ display_board(void)
 	}
 }
 
-void
+static void
 draw_on_board(int cell, int symbol)
 {
 	board[cell/3][cell%3] = symbol;
 }
 
-int
+static int
 game_over(void)
 {
 	return
@@ -36,7 +36,7 @@ game_over(void)
 	;
 }
 
-int
+static int
 empty_cell(int cell)
 {
 	int symbol;
@@ -45,7 +45,7 @@ empty_cell(int cell)
 	return symbol != 'x' && symbol != 'o';
 }
 
-int
+static int
 take_turn(int player)
 {
 	int cell;
