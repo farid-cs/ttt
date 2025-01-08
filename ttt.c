@@ -29,36 +29,36 @@ game_over(void)
 }
 
 static int
-isempty(int symbol)
+isempty(int c)
 {
-	return symbol != 'x' && symbol != 'o';
+	return c != 'x' && c != 'o';
 }
 
 static int
 take_turn(int player)
 {
-	int cell;
+	int pos;
 
 	display_board();
 	printf("Player #%d's turn: ", player + 1);
 	fflush(stdout);
 
-	scanf("%d", &cell);
+	scanf("%d", &pos);
 	getchar();
 
-	if (cell < 0 || cell > 8) {
+	if (pos < 0 || pos > 8) {
 		fprintf(stderr, "error: invalid cell. Press enter to continue...");
 		getchar();
 		return -1;
 	}
 
-	if (!isempty(board[cell])) {
+	if (!isempty(board[pos])) {
 		fprintf(stderr, "error: non empty cell. Press enter to continue...");
 		getchar();
 		return -1;
 	}
 
-	board[cell] = player % 2 ? 'o' : 'x';
+	board[pos] = player % 2 ? 'o' : 'x';
 
 	return 0;
 }
