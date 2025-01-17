@@ -34,43 +34,35 @@ isempty(int c)
 	return c != 'x' && c != 'o';
 }
 
-static int
-take_turn(int player)
-{
-	int pos;
-
-	display_board();
-	printf("Player #%d's turn: ", player + 1);
-	fflush(stdout);
-
-	scanf("%d", &pos);
-	getchar();
-
-	if (pos < 0 || pos > 8) {
-		fprintf(stderr, "error: invalid cell. Press enter to continue...");
-		getchar();
-		return -1;
-	}
-
-	if (!isempty(board[pos])) {
-		fprintf(stderr, "error: non empty cell. Press enter to continue...");
-		getchar();
-		return -1;
-	}
-
-	board[pos] = player % 2 ? 'o' : 'x';
-
-	return 0;
-}
-
 int
 main(void)
 {
 	int player = 0;
 
 	for (;;) {
-		if (take_turn(player))
+		int pos;
+
+		display_board();
+		printf("Player #%d's turn: ", player + 1);
+		fflush(stdout);
+
+		scanf("%d", &pos);
+		getchar();
+
+		if (pos < 0 || pos > 8) {
+			fprintf(stderr, "error: invalid cell. Press enter to continue...");
+			getchar();
 			continue;
+		}
+
+		if (!isempty(board[pos])) {
+			fprintf(stderr, "error: non empty cell. Press enter to continue...");
+			getchar();
+			continue;
+		}
+
+		board[pos] = player % 2 ? 'o' : 'x';
+
 		if (game_over())
 			break;
 		player ^= 1;
