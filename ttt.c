@@ -1,10 +1,11 @@
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 static void
 display_board(const int *board)
 {
-	for (int i = 0; i < 9; i += 3)
+	for (size_t i = 0; i < 9; i += 3)
 		printf("%c %c %c\n", board[i], board[i+1], board[i+2]);
 }
 
@@ -39,16 +40,16 @@ main(void)
 	int player = 0;
 
 	for (;;) {
-		int pos;
+		size_t pos;
 
 		display_board(board);
 		printf("Player #%d's turn: ", player + 1);
 		fflush(stdout);
 
-		scanf("%d", &pos);
+		scanf("%zu", &pos);
 		getchar();
 
-		if (pos < 0 || pos > 8) {
+		if (pos > 8) {
 			fprintf(stderr, "error: invalid cell. Press enter to continue...");
 			getchar();
 			continue;
