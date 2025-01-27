@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 static void
 display_board(const int *board)
@@ -69,5 +70,5 @@ main(void)
 	display_board(board);
 	printf("Player #%d won\n", player + 1);
 
-	return 0;
+	return EXIT_SUCCESS;
 }
