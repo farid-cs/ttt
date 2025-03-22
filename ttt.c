@@ -37,13 +37,13 @@ main(void)
 		'3', '4', '5',
 		'6', '7', '8',
 	};
-	int player = 0;
+	int player_id = 0;
 
 	for (;;) {
 		size_t pos;
 
 		display_board(board);
-		printf("Player #%d's turn: ", player + 1);
+		printf("Player #%d's turn: ", player_id + 1);
 		fflush(stdout);
 
 		scanf("%zu", &pos);
@@ -61,15 +61,16 @@ main(void)
 			continue;
 		}
 
-		board[pos] = player % 2 ? 'o' : 'x';
+		board[pos] = !player_id ? 'x' : 'o';
 
 		if (game_over(board))
 			break;
-		player ^= 1;
+
+		player_id = !player_id;
 	}
 
 	display_board(board);
-	printf("Player #%d won\n", player + 1);
+	printf("Player #%d won\n", player_id + 1);
 
 	return EXIT_SUCCESS;
 }
