@@ -40,7 +40,7 @@ main(void)
 	int player_id = 0;
 
 	for (;;) {
-		size_t pos;
+		size_t pos = -1;
 
 		display_board(board);
 		printf("Player #%d's turn: ", player_id + 1);
@@ -49,17 +49,8 @@ main(void)
 		scanf("%zu", &pos);
 		getchar();
 
-		if (pos > 8) {
-			fprintf(stderr, "error: invalid cell. Press enter to continue...");
-			getchar();
+		if (pos > 8 || !isempty(board[pos]))
 			continue;
-		}
-
-		if (!isempty(board[pos])) {
-			fprintf(stderr, "error: non empty cell. Press enter to continue...");
-			getchar();
-			continue;
-		}
 
 		board[pos] = !player_id ? 'x' : 'o';
 
