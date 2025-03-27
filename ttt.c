@@ -54,8 +54,10 @@ update(void)
 
 	board[pos] = !player_id ? 'x' : 'o';
 
-	if (game_over())
+	if (game_over()) {
+		end = 1;
 		return;
+	}
 
 	player_id = !player_id;
 }
