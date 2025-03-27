@@ -9,6 +9,7 @@ int board[] = {
 };
 int player_id = 0;
 size_t pos;
+int end = 0;
 
 static void
 display_board(void)
@@ -37,28 +38,34 @@ isempty(int c)
 	return c != 'x' && c != 'o';
 }
 
+void
+update(void)
+{
+	pos = -1;
+
+	printf("Player #%d's turn: ", player_id + 1);
+	fflush(stdout);
+
+	scanf("%zu", &pos);
+	getchar();
+
+	if (pos > 8 || !isempty(board[pos]))
+		return;
+
+	board[pos] = !player_id ? 'x' : 'o';
+
+	if (game_over())
+		return;
+
+	player_id = !player_id;
+}
+
 int
 main(void)
 {
-	for (;;) {
-		pos = -1;
-
+	while (!end) {
 		display_board();
-		printf("Player #%d's turn: ", player_id + 1);
-		fflush(stdout);
-
-		scanf("%zu", &pos);
-		getchar();
-
-		if (pos > 8 || !isempty(board[pos]))
-			continue;
-
-		board[pos] = !player_id ? 'x' : 'o';
-
-		if (game_over())
-			break;
-
-		player_id = !player_id;
+		update();
 	}
 
 	display_board();
