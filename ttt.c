@@ -2,15 +2,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int board[] = {
+	'0', '1', '2',
+	'3', '4', '5',
+	'6', '7', '8',
+};
+int player_id = 0;
+size_t pos;
+
 static void
-display_board(const int *board)
+display_board(void)
 {
 	for (size_t i = 0; i < 9; i += 3)
 		printf("%c %c %c\n", board[i], board[i+1], board[i+2]);
 }
 
 static int
-game_over(const int *board)
+game_over(void)
 {
 	return
 		board[0] == board[1] && board[1] == board[2] ||
@@ -32,17 +40,10 @@ isempty(int c)
 int
 main(void)
 {
-	int board[] = {
-		'0', '1', '2',
-		'3', '4', '5',
-		'6', '7', '8',
-	};
-	int player_id = 0;
-
 	for (;;) {
-		size_t pos = -1;
+		pos = -1;
 
-		display_board(board);
+		display_board();
 		printf("Player #%d's turn: ", player_id + 1);
 		fflush(stdout);
 
@@ -54,13 +55,13 @@ main(void)
 
 		board[pos] = !player_id ? 'x' : 'o';
 
-		if (game_over(board))
+		if (game_over())
 			break;
 
 		player_id = !player_id;
 	}
 
-	display_board(board);
+	display_board();
 	printf("Player #%d won\n", player_id + 1);
 
 	return EXIT_SUCCESS;
