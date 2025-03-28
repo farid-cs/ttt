@@ -9,11 +9,11 @@ int board[] = {
 };
 int player_id = 0;
 size_t pos;
-int end = 0;
+int quit = 0;
 int win = 0;
 
 static void
-display_board(void)
+display(void)
 {
 	for (size_t i = 0; i < 9; i += 3)
 		printf("%c %c %c\n", board[i], board[i+1], board[i+2]);
@@ -26,7 +26,7 @@ display_board(void)
 }
 
 static int
-game_over(void)
+crossed(void)
 {
 	return
 		board[0] == board[1] && board[1] == board[2] ||
@@ -49,7 +49,7 @@ void
 update(void)
 {
 	if (win) {
-		end = 1;
+		quit = 1;
 		return;
 	}
 
@@ -62,7 +62,7 @@ update(void)
 
 	board[pos] = !player_id ? 'x' : 'o';
 
-	if (game_over()) {
+	if (crossed()) {
 		win = 1;
 		return;
 	}
@@ -73,8 +73,8 @@ update(void)
 int
 main(void)
 {
-	while (!end) {
-		display_board();
+	while (!quit) {
+		display();
 		update();
 	}
 
