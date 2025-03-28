@@ -10,12 +10,19 @@ int board[] = {
 int player_id = 0;
 size_t pos;
 int end = 0;
+int win = 0;
 
 static void
 display_board(void)
 {
 	for (size_t i = 0; i < 9; i += 3)
 		printf("%c %c %c\n", board[i], board[i+1], board[i+2]);
+	if (win) {
+		printf("Player #%d won\n", player_id + 1);
+	} else {
+		printf("Player #%d: ", player_id + 1);
+		fflush(stdout);
+	}
 }
 
 static int
@@ -41,11 +48,12 @@ isempty(int c)
 void
 update(void)
 {
+	if (win) {
+		end = 1;
+		return;
+	}
+
 	pos = -1;
-
-	printf("Player #%d's turn: ", player_id + 1);
-	fflush(stdout);
-
 	scanf("%zu", &pos);
 	getchar();
 
@@ -55,7 +63,7 @@ update(void)
 	board[pos] = !player_id ? 'x' : 'o';
 
 	if (game_over()) {
-		end = 1;
+		win = 1;
 		return;
 	}
 
@@ -69,9 +77,6 @@ main(void)
 		display_board();
 		update();
 	}
-
-	display_board();
-	printf("Player #%d won\n", player_id + 1);
 
 	return EXIT_SUCCESS;
 }
