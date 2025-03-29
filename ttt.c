@@ -11,6 +11,7 @@ int player_id = 0;
 size_t pos;
 int quit = 0;
 int win = 0;
+int tie = 0;
 
 static void
 display(void)
@@ -19,6 +20,8 @@ display(void)
 		printf("%c %c %c\n", board[i], board[i+1], board[i+2]);
 	if (win) {
 		printf("Player #%d won\n", player_id + 1);
+	} else if (tie) {
+		printf("No winner\n");
 	} else {
 		printf("Player #%d: ", player_id + 1);
 		fflush(stdout);
@@ -48,7 +51,7 @@ isempty(int c)
 void
 update(void)
 {
-	if (win) {
+	if (win || tie) {
 		quit = 1;
 		return;
 	}
@@ -65,6 +68,14 @@ update(void)
 	if (crossed()) {
 		win = 1;
 		return;
+	}
+
+	tie = 1;
+	for (int i = 0; i != 9; i++) {
+		if (isempty(board[i])) {
+			tie = 0;
+			break;
+		}
 	}
 
 	player_id = !player_id;
