@@ -1,34 +1,14 @@
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-int board[] = {
-	'0', '1', '2',
-	'3', '4', '5',
-	'6', '7', '8',
-};
-int player_id = 0;
-size_t pos;
-int quit = 0;
-int win = 0;
-int tie = 0;
+static int board[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8' };
+static int player_id = 0;
+static bool win = false;
+static bool tie = false;
 
-static void
-display(void)
-{
-	for (size_t i = 0; i < 9; i += 3)
-		printf("%c %c %c\n", board[i], board[i+1], board[i+2]);
-	if (win) {
-		printf("Player #%d won\n", player_id + 1);
-	} else if (tie) {
-		printf("No winner\n");
-	} else {
-		printf("Player #%d: ", player_id + 1);
-		fflush(stdout);
-	}
-}
-
-static int
+static bool
 crossed(void)
 {
 	return
@@ -42,52 +22,78 @@ crossed(void)
 		board[2] == board[4] && board[4] == board[6];
 }
 
-static int
-isempty(int c)
+static bool
+isemptyat(size_t pos)
 {
-	return c != 'x' && c != 'o';
+	return board[pos] != 'x' && board[pos] != 'o';
 }
 
-void
-update(void)
+static void
+put_at(size_t pos)
 {
-	if (win || tie) {
-		quit = 1;
+	if (!isemptyat(pos))
 		return;
-	}
-
-	pos = -1;
-	scanf("%zu", &pos);
-	getchar();
-
-	if (pos > 8 || !isempty(board[pos]))
-		return;
-
-	board[pos] = !player_id ? 'x' : 'o';
-
+	if (player_id)
+		board[pos] = 'o';
+	else
+		board[pos] = 'x';
 	if (crossed()) {
-		win = 1;
+		win = true;
 		return;
 	}
-
-	tie = 1;
-	for (int i = 0; i != 9; i++) {
-		if (isempty(board[i])) {
-			tie = 0;
-			break;
+	for (size_t i = 0; i != 9; i++) {
+		if (isemptyat(i)) {
+			player_id = !player_id;
+			return;
 		}
 	}
+	tie = true;
+}
 
-	player_id = !player_id;
+static int
+get_pos(size_t *pos)
+{
+	printf("Player #%d: ", player_id + 1);
+	fflush(stdout);
+	scanf("%zu", pos);
+	getchar();
+	if (*pos > 8)
+		return -1;
+	return 0;
+}
+
+static void
+update(void)
+{
+	size_t pos = -1;
+
+	if (get_pos(&pos) < 0)
+		return;
+	put_at(pos);
+}
+
+static void
+print_board(void)
+{
+	int *b = NULL;
+
+	for (b = board; b != board+9; b += 3)
+		printf("%c %c %c\n", b[0], b[1], b[2]);
 }
 
 int
 main(void)
 {
-	while (!quit) {
-		display();
+	while (!win && !tie) {
+		print_board();
 		update();
 	}
+
+	print_board();
+	if (win)
+		printf("Player #%d won\n", player_id + 1);
+	else
+		printf("No winner\n");
 
 	return EXIT_SUCCESS;
 }
