@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 static int board[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8' };
-static int player_id = 0;
+static int id = 0;
 static bool win = false;
 static bool tie = false;
 
@@ -32,7 +32,7 @@ put_at(size_t pos)
 {
 	if (!isemptyat(pos))
 		return;
-	if (player_id)
+	if (id)
 		board[pos] = 'o';
 	else
 		board[pos] = 'x';
@@ -42,7 +42,8 @@ put_at(size_t pos)
 	}
 	for (size_t i = 0; i != 9; i++) {
 		if (isemptyat(i)) {
-			player_id = !player_id;
+			id += 1;
+			id %= 2;
 			return;
 		}
 	}
@@ -52,7 +53,7 @@ put_at(size_t pos)
 static int
 get_pos(size_t *pos)
 {
-	printf("Player #%d: ", player_id + 1);
+	printf("Player #%d: ", id + 1);
 	fflush(stdout);
 	scanf("%zu", pos);
 	getchar();
@@ -64,7 +65,7 @@ get_pos(size_t *pos)
 static void
 update(void)
 {
-	size_t pos = -1;
+	size_t pos = 0;
 
 	if (get_pos(&pos) < 0)
 		return;
@@ -90,7 +91,7 @@ main(void)
 
 	print_board();
 	if (win)
-		printf("Player #%d won\n", player_id + 1);
+		printf("Player #%d won\n", id + 1);
 	else
 		printf("No winner\n");
 
