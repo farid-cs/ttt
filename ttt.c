@@ -3,10 +3,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef enum Status {
+	Proceed,
+	Win,
+	Tie,
+} Status;
+
 static int board[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8' };
 static int id = 0;
-static bool win = false;
-static bool tie = false;
+static Status status = Proceed;
 
 static bool
 crossed(void)
@@ -37,7 +42,7 @@ put_at(size_t pos)
 	else
 		board[pos] = 'x';
 	if (crossed()) {
-		win = true;
+		status = Win;
 		return;
 	}
 	for (size_t i = 0; i != 9; i++) {
@@ -47,7 +52,7 @@ put_at(size_t pos)
 			return;
 		}
 	}
-	tie = true;
+	status = Tie;
 }
 
 static int
@@ -56,7 +61,6 @@ get_pos(size_t *pos)
 	printf("Player #%d: ", id + 1);
 	fflush(stdout);
 	scanf("%zu", pos);
-	getchar();
 	if (*pos > 8)
 		return -1;
 	return 0;
@@ -84,13 +88,13 @@ print_board(void)
 int
 main(void)
 {
-	while (!win && !tie) {
+	while (status == Proceed) {
 		print_board();
 		update();
 	}
 
 	print_board();
-	if (win)
+	if (status == Win)
 		printf("Player #%d won\n", id + 1);
 	else
 		printf("No winner\n");
