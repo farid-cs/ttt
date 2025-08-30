@@ -13,35 +13,35 @@ static int board[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8' };
 static int id = 0;
 static Status status = Proceed;
 
-static bool
-crossed(void)
+static bool row(size_t i, size_t j, size_t k)
 {
-	return (board[0] == board[1] && board[1] == board[2]) ||
-		(board[3] == board[4] && board[4] == board[5]) ||
-		(board[6] == board[7] && board[7] == board[8]) ||
-		(board[0] == board[3] && board[3] == board[6]) ||
-		(board[1] == board[4] && board[4] == board[7]) ||
-		(board[2] == board[5] && board[5] == board[8]) ||
-		(board[0] == board[4] && board[4] == board[8]) ||
-		(board[2] == board[4] && board[4] == board[6]);
+	return board[i] == board[j] && board[j] == board[k];
 }
 
 static bool
-isemptyat(size_t pos)
+any_row(void)
 {
-	return board[pos] != 'x' && board[pos] != 'o';
+	return row(0, 1, 2) || row(3, 4, 5) || row(6, 7, 8)
+		|| row(0, 3, 6) || row(1, 4, 7) || row(2, 5, 8)
+		|| row(0, 4, 8) || row(2, 4, 6);
+}
+
+static bool
+isemptyat(size_t index)
+{
+	return board[index] != 'x' && board[index] != 'o';
 }
 
 static void
-put_at(size_t pos)
+put_at(size_t index)
 {
-	if (!isemptyat(pos))
+	if (!isemptyat(index))
 		return;
 	if (id)
-		board[pos] = 'o';
+		board[index] = 'o';
 	else
-		board[pos] = 'x';
-	if (crossed()) {
+		board[index] = 'x';
+	if (any_row()) {
 		status = Win;
 		return;
 	}
@@ -56,12 +56,12 @@ put_at(size_t pos)
 }
 
 static int
-get_pos(size_t *pos)
+get_index(size_t *index)
 {
 	printf("Player #%d: ", id + 1);
 	fflush(stdout);
-	scanf("%zu", pos);
-	if (*pos > 8)
+	scanf("%zu", index);
+	if (*index > 8)
 		return -1;
 	return 0;
 }
@@ -69,17 +69,17 @@ get_pos(size_t *pos)
 static void
 update(void)
 {
-	size_t pos = 0;
+	size_t index = 0;
 
-	if (get_pos(&pos) < 0)
+	if (get_index(&index) < 0)
 		return;
-	put_at(pos);
+	put_at(index);
 }
 
 static void
 print_board(void)
 {
-	int *b = NULL;
+	const int *b = NULL;
 
 	for (b = board; b != board+9; b += 3)
 		printf("%c %c %c\n", b[0], b[1], b[2]);
