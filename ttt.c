@@ -1,66 +1,12 @@
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef enum Status {
-	Proceed,
-	Win,
-	Tie,
-} Status;
-
-static int board[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8' };
-static int id = 0;
-static Status status = Proceed;
-
-static bool
-row(size_t i, size_t j, size_t k)
-{
-	return board[i] == board[j] && board[j] == board[k];
-}
-
-static bool
-any_row(void)
-{
-	return row(0, 1, 2) || row(3, 4, 5) || row(6, 7, 8)
-		|| row(0, 3, 6) || row(1, 4, 7) || row(2, 5, 8)
-		|| row(0, 4, 8) || row(2, 4, 6);
-}
-
-static bool
-isemptyat(size_t index)
-{
-	return board[index] != 'x' && board[index] != 'o';
-}
-
-static void
-put_at(size_t index)
-{
-	if (!isemptyat(index))
-		return;
-	if (id)
-		board[index] = 'o';
-	else
-		board[index] = 'x';
-	if (any_row()) {
-		status = Win;
-		return;
-	}
-	for (size_t i = 0; i != 9; i++) {
-		if (isemptyat(i)) {
-			id += 1;
-			id %= 2;
-			return;
-		}
-	}
-	status = Tie;
-}
+#include "core.h"
 
 static bool
 get_index(size_t *index)
 {
-	printf("Player #%d: ", id + 1);
-	fflush(stdout);
 	scanf("%zu", index);
 	if (*index > 8)
 		return false;
@@ -68,7 +14,7 @@ get_index(size_t *index)
 }
 
 static void
-print_board(void)
+print_board(const int *board)
 {
 	const int *b = NULL;
 
@@ -79,17 +25,24 @@ print_board(void)
 int
 main(void)
 {
-	size_t index = 0;
+	static size_t index = 0;
+	static State s = {
+		.board = { '0', '1', '2', '3', '4', '5', '6', '7', '8' },
+		.id = 0,
+		.status = Proceed,
+	};
 
-	while (status == Proceed) {
-		print_board();
+	while (s.status == Proceed) {
+		print_board(s.board);
+		printf("Player #%d: ", s.id + 1);
+		fflush(stdout);
 		if (get_index(&index))
-			put_at(index);
+			put_at(&s, index);
 	}
 
-	print_board();
-	if (status == Win)
-		printf("Player #%d won\n", id + 1);
+	print_board(s.board);
+	if (s.status == Win)
+		printf("Player #%d won\n", s.id + 1);
 	else
 		printf("No winner\n");
 
