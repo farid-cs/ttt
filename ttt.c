@@ -13,7 +13,8 @@ static int board[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8' };
 static int id = 0;
 static Status status = Proceed;
 
-static bool row(size_t i, size_t j, size_t k)
+static bool
+row(size_t i, size_t j, size_t k)
 {
 	return board[i] == board[j] && board[j] == board[k];
 }
@@ -67,15 +68,6 @@ get_index(size_t *index)
 }
 
 static void
-update(void)
-{
-	size_t index = 0;
-
-	if (get_index(&index))
-		put_at(index);
-}
-
-static void
 print_board(void)
 {
 	const int *b = NULL;
@@ -87,9 +79,12 @@ print_board(void)
 int
 main(void)
 {
+	size_t index = 0;
+
 	while (status == Proceed) {
 		print_board();
-		update();
+		if (get_index(&index))
+			put_at(index);
 	}
 
 	print_board();
