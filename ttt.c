@@ -5,12 +5,14 @@
 #include "core.h"
 
 static bool
-get_index(size_t *index)
+ask_for_index(int id)
 {
-	scanf("%zu", index);
-	if (*index > 8)
-		return false;
-	return true;
+	size_t index = 0;
+
+	printf("Player #%d: ", id + 1);
+	fflush(stdout);
+	scanf("%zu", &index);
+	return index;
 }
 
 static void
@@ -34,9 +36,8 @@ main(void)
 
 	while (s.status == Proceed) {
 		print_board(s.board);
-		printf("Player #%d: ", s.id + 1);
-		fflush(stdout);
-		if (get_index(&index))
+		index = ask_for_index(s.id);
+		if (index < 9)
 			put_at(&s, index);
 	}
 
