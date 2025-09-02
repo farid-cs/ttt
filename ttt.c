@@ -63,8 +63,8 @@ get_index(size_t *index)
 	fflush(stdout);
 	scanf("%zu", index);
 	if (*index > 8)
-		return -1;
-	return 0;
+		return false;
+	return true;
 }
 
 static void
