@@ -55,7 +55,7 @@ put_at(size_t index)
 	status = Tie;
 }
 
-static int
+static bool
 get_index(size_t *index)
 {
 	printf("Player #%d: ", id + 1);
@@ -71,9 +71,8 @@ update(void)
 {
 	size_t index = 0;
 
-	if (get_index(&index) < 0)
-		return;
-	put_at(index);
+	if (get_index(&index))
+		put_at(index);
 }
 
 static void
