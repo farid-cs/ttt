@@ -15,7 +15,7 @@ ask_for_index(int id, size_t *index)
 static void
 print_board(const int *board)
 {
-	const int *b = NULL;
+	const int *b = nullptr;
 
 	for (b = board; b != board+9; b += 3)
 		printf("%c %c %c\n", b[0], b[1], b[2]);
