@@ -15,6 +15,7 @@ typedef struct State {
 	Status status;
 } State;
 
+State State_init(void);
 void put_at(State *s, size_t index);
 
 #endif

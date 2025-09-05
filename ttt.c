@@ -5,14 +5,12 @@
 #include "core.h"
 
 static bool
-ask_for_index(int id)
+ask_for_index(int id, size_t *index)
 {
-	size_t index = 0;
-
 	printf("Player #%d: ", id + 1);
 	fflush(stdout);
-	scanf("%zu", &index);
-	return index;
+	scanf("%zu", index);
+	return *index < 9;
 }
 
 static void
@@ -27,17 +25,12 @@ print_board(const int *board)
 int
 main(void)
 {
-	static size_t index = 0;
-	static State s = {
-		.board = { '0', '1', '2', '3', '4', '5', '6', '7', '8' },
-		.id = 0,
-		.status = Proceed,
-	};
+	size_t index = 0;
+	State s = State_init();
 
 	while (s.status == Proceed) {
 		print_board(s.board);
-		index = ask_for_index(s.id);
-		if (index < 9)
+		if (ask_for_index(s.id, &index))
 			put_at(&s, index);
 	}
 

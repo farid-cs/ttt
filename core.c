@@ -2,6 +2,15 @@
 
 #include "core.h"
 
+State State_init(void)
+{
+	return (State) {
+		.board = { '0', '1', '2', '3', '4', '5', '6', '7', '8' },
+		.id = 0,
+		.status = Proceed,
+	};
+}
+
 static bool
 row(State *s, size_t i, size_t j, size_t k)
 {
