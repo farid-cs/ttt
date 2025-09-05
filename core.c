@@ -1,5 +1,3 @@
-#include <stdbool.h>
-
 #include "core.h"
 
 State State_init(void)

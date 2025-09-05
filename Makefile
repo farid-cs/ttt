@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -g -std=c99 -pedantic -Wall -Wextra -Wconversion -Werror
+CFLAGS = -g -std=c23 -pedantic -Wall -Wextra -Wconversion -Werror
 
 all: ttt
 
