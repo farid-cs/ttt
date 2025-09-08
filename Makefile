@@ -18,7 +18,7 @@ ttt-tui: ttt-tui.o core.o ${termbox_o}
 	${CC} -o $@ -c ${CFLAGS} ${CPPFLAGS} $<
 
 ${termbox_o}: ${termbox_c}
-	${CC} -o ${termbox_o} -c ${CFLAGS} ${CPPFLAGS} -DTB_IMPL ${termbox_c}
+	${CC} -o ${termbox_o} -c ${CFLAGS} ${CPPFLAGS} ${termbox_c}
 
 ttt-tui.o: ttt-tui.c core.h ${termbox_h}
 ttt.o: ttt.c core.h
