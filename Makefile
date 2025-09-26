@@ -9,10 +9,10 @@ termbox_o = external/termbox2.o
 all: ttt ttt-tui
 
 ttt: ttt.o core.o
-	${CC} -o ttt ttt.o core.o
+	${CC} -o ttt $^
 
 ttt-tui: ttt-tui.o core.o ${termbox_o}
-	${CC} -o ttt-tui ttt-tui.o core.o ${termbox_o}
+	${CC} -o ttt-tui $^
 
 .c.o:
 	${CC} -o $@ -c ${CFLAGS} ${CPPFLAGS} $<
