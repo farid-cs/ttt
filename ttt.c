@@ -13,6 +13,13 @@ ask_for_index(int id, size_t *index)
 }
 
 static void
+clear_screen(void)
+{
+	printf("\33[H\33[J");
+	fflush(stdout);
+}
+
+static void
 print_board(const int *board)
 {
 	const int *b = nullptr;
@@ -28,11 +35,13 @@ main(void)
 	State s = State_init();
 
 	while (s.status == Proceed) {
+		clear_screen();
 		print_board(s.board);
 		if (ask_for_index(s.id, &index))
 			put_at(&s, index);
 	}
 
+	clear_screen();
 	print_board(s.board);
 	if (s.status == Win)
 		printf("Player #%d won\n", s.id + 1);
