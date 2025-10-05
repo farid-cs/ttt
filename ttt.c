@@ -6,26 +6,49 @@
 static bool
 ask_for_index(int id, size_t *index)
 {
-	printf("Player #%d: ", id + 1);
-	fflush(stdout);
-	scanf("%zu", index);
-	return *index < 9;
+	int c = 0;
+
+	if (printf("Player #%d: ", id + 1) < 0)
+		return false;
+	if (fflush(stdout) == EOF)
+		return false;
+	c = fgetc(stdin);
+	if (c < '0' || c > '8') {
+		while (c != '\n' && c != EOF) {
+			c = fgetc(stdin);
+		}
+		return false;
+	}
+	*index = c - '0';
+	c = fgetc(stdin);
+	if (c != '\n') {
+		while (c != '\n' && c != EOF) {
+			c = fgetc(stdin);
+		}
+		return false;
+	}
+	return true;
 }
 
-static void
+static bool
 clear_screen(void)
 {
-	printf("\33[H\33[J");
-	fflush(stdout);
+	if (printf("\33[H\33[J") < 0)
+		return false;
+	if (fflush(stdout) == EOF)
+		return false;
+	return true;
 }
 
-static void
+static bool
 print_board(const int *board)
 {
 	const int *b = nullptr;
 
 	for (b = board; b != board+9; b += 3)
-		printf("%c %c %c\n", b[0], b[1], b[2]);
+		if (printf("%c %c %c\n", b[0], b[1], b[2]) < 0)
+			return false;
+	return true;
 }
 
 int
@@ -35,18 +58,28 @@ main(void)
 	State s = State_init();
 
 	while (s.status == Proceed) {
-		clear_screen();
-		print_board(s.board);
+		if (!clear_screen())
+			return EXIT_FAILURE;
+		if (!print_board(s.board))
+			return EXIT_FAILURE;
 		if (ask_for_index(s.id, &index))
 			put_at(&s, index);
+		else if (feof(stdin))
+			return EXIT_SUCCESS;
+		else if (ferror(stdin) || ferror(stdout))
+			return EXIT_FAILURE;
 	}
 
-	clear_screen();
-	print_board(s.board);
-	if (s.status == Win)
-		printf("Player #%d won\n", s.id + 1);
-	else
-		printf("No winner\n");
+	if (!clear_screen())
+		return EXIT_FAILURE;
+	if (!print_board(s.board))
+		return EXIT_FAILURE;
+	if (s.status == Win) {
+		if (printf("Player #%d won\n", s.id + 1) < 0)
+			return EXIT_FAILURE;
+
+	} else if (printf("No winner\n") < 0)
+			return EXIT_FAILURE;
 
 	return EXIT_SUCCESS;
 }
