@@ -41,12 +41,12 @@ clear_screen(void)
 }
 
 static bool
-print_board(const int *board)
+print_board(const int *b)
 {
-	const int *b = nullptr;
+	size_t i = 0;
 
-	for (b = board; b != board+9; b += 3)
-		if (printf("%c %c %c\n", b[0], b[1], b[2]) < 0)
+	for (i = 0; i != 9; i += 3)
+		if (printf("%c %c %c\n", b[i], b[i+1], b[i+2]) < 0)
 			return false;
 	return true;
 }
