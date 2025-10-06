@@ -77,9 +77,8 @@ main(void)
 	if (s.status == Win) {
 		if (printf("Player #%d won\n", s.id + 1) < 0)
 			return EXIT_FAILURE;
-
 	} else if (printf("No winner\n") < 0)
-			return EXIT_FAILURE;
+		return EXIT_FAILURE;
 
 	return EXIT_SUCCESS;
 }
