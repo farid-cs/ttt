@@ -4,29 +4,33 @@
 #include "core.h"
 
 static bool
-ask_for_index(int id, size_t *index)
+scan_index(size_t *index)
 {
 	int c = 0;
 
-	if (printf("Player #%d: ", id + 1) < 0)
-		return false;
-	if (fflush(stdout) == EOF)
-		return false;
 	c = fgetc(stdin);
 	if (c < '0' || c > '8') {
-		while (c != '\n' && c != EOF) {
+		while (c != '\n' && c != EOF)
 			c = fgetc(stdin);
-		}
 		return false;
 	}
 	*index = c - '0';
 	c = fgetc(stdin);
 	if (c != '\n') {
-		while (c != '\n' && c != EOF) {
+		while (c != '\n' && c != EOF)
 			c = fgetc(stdin);
-		}
 		return false;
 	}
+	return true;
+}
+
+static bool
+prompt_for_index(int id)
+{
+	if (printf("Player #%d: ", id + 1) < 0)
+		return false;
+	if (fflush(stdout) == EOF)
+		return false;
 	return true;
 }
 
@@ -62,11 +66,13 @@ main(void)
 			return EXIT_FAILURE;
 		if (!print_board(s.board))
 			return EXIT_FAILURE;
-		if (ask_for_index(s.id, &index))
+		if (!prompt_for_index(s.id))
+			return EXIT_FAILURE;
+		if (scan_index(&index))
 			put_at(&s, index);
 		else if (feof(stdin))
 			return EXIT_SUCCESS;
-		else if (ferror(stdin) || ferror(stdout))
+		else if (ferror(stdin))
 			return EXIT_FAILURE;
 	}
 
