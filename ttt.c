@@ -3,6 +3,15 @@
 
 #include "core.h"
 
+static void
+consume_line(void)
+{
+	int c = fgetc(stdin);
+
+	while (c != '\n' && c != EOF)
+		c = fgetc(stdin);
+}
+
 static bool
 scan_index(size_t *index)
 {
@@ -10,15 +19,14 @@ scan_index(size_t *index)
 
 	c = fgetc(stdin);
 	if (c < '0' || c > '8') {
-		while (c != '\n' && c != EOF)
-			c = fgetc(stdin);
+		if (c != '\n' && c != EOF)
+			consume_line();
 		return false;
 	}
 	*index = c - '0';
 	c = fgetc(stdin);
 	if (c != '\n') {
-		while (c != '\n' && c != EOF)
-			c = fgetc(stdin);
+		consume_line();
 		return false;
 	}
 	return true;
